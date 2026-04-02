@@ -214,7 +214,7 @@ PRESETS = {
 # ── Widgets ───────────────────────────────────────────────────────────────────
 w_pH    = pn.widgets.FloatSlider(name='pH',                      value=DEFAULTS['pH'],       start=4.0,  end=10.0, step=0.1,  width=250)
 w_lo2   = pn.widgets.FloatSlider(name='O₂ partial pressure (log₁₀ bar)',   value=DEFAULTS['log_pO2'],  start=-10.0,end=0.0,  step=0.5,  width=250)
-w_lh2   = pn.widgets.FloatSlider(name='H₂ partial pressure (log₁₀ bar)',   value=DEFAULTS['log_pH2'],  start=-7.0, end=-1.0, step=0.25, width=250)
+w_lh2   = pn.widgets.FloatSlider(name='H₂ partial pressure (log₁₀ bar)',   value=DEFAULTS['log_pH2'],  start=-7.0, end=0.0,  step=0.25, width=250)
 w_lco2  = pn.widgets.FloatSlider(name='CO₂ partial pressure (log₁₀ bar)',  value=DEFAULTS['log_pCO2'], start=-3.0, end=0.0,  step=0.25, width=250)
 w_lch4  = pn.widgets.FloatSlider(name='CH₄ partial pressure (log₁₀ bar)',  value=DEFAULTS['log_pCH4'], start=-4.0, end=0.0,  step=0.25, width=250)
 w_lso4  = pn.widgets.FloatSlider(name='SO₄²⁻ concentration (log₁₀ M)',     value=DEFAULTS['log_cSO4'], start=-4.0, end=0.0,  step=0.25, width=250)
@@ -286,8 +286,8 @@ def conditions_display(pH, lo2, lh2, lco2, lch4, lso4, lac, lbut, lglc, lprop):
         return f'{v:.3g} {unit}'
     def fmt_pres(log_val):
         v = 10**log_val
-        if v >= 0.01:
-            return f'{v*100:.1f}%'
+        if v >= 0.005:
+            return f'{v:.3g} bar'
         return f'{v*1e6:.2g} ppm'
     rows = [
         ('pH', f'{pH:.1f}'),
@@ -490,10 +490,10 @@ LEGEND_HTML = """
 <div style="font-size:10px;background:#f9f9f9;border:1px solid #ddd;
             border-radius:4px;padding:5px 8px;margin-bottom:4px;line-height:1.9">
   <b style="font-size:10px;color:#333">Redox couples</b><br>
-  <span style="letter-spacing:2px;color:#888">&#8212; &#8212;</span>
-  &nbsp;E°′ — standard potential (pH 7, all species at 1 M / 1 bar)<br>
   <span style="color:#333;font-weight:bold">&#8212;&#8212;&#8212;</span>
   &nbsp;E — actual potential under current conditions (Nernst)<br>
+  <span style="letter-spacing:2px;color:#888">&#8212; &#8212;</span>
+  &nbsp;E°′ — standard potential (pH 7, all species at 1 M / 1 bar)<br>
   <span style="font-size:9px;color:#555;font-style:italic">
     Solid and dashed lines coincide at standard conditions.</span>
   <hr style="margin:4px 0;border:none;border-top:1px solid #ddd">
