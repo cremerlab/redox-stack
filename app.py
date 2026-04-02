@@ -190,8 +190,10 @@ PRESETS = {
         log_cSO4=-3.0, log_cAc=-1.15,  log_cBut=-1.85, log_cGlc=-4.0, log_cProp=-1.65,
     ),
     'Human colon': dict(
+        # High H2: fermentation not fully quenched by methanogenesis
+        # Low CH4: many humans have limited methanogenic capacity
         pH=6.8,  log_pO2=-7.0,
-        log_pH2=-3.5,  log_pCO2=-0.60, log_pCH4=-1.3,
+        log_pH2=-1.5,  log_pCO2=-0.60, log_pCH4=-3.0,
         log_cSO4=-2.7, log_cAc=-1.5,   log_cBut=-2.0,  log_cGlc=-4.5, log_cProp=-2.0,
     ),
     'Marine sediment': dict(
