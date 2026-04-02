@@ -515,13 +515,25 @@ right_panel = pn.Column(
 )
 
 HEADER_HTML = """
-<div style="margin-bottom:8px">
-  <h2 style="margin:0 0 2px 0;font-size:20px">
-    RedoxStack — Who Gets the Electrons? Microbial Energetics Under Real Conditions
-  </h2>
-  <div style="font-size:11px;color:#b71c1c;background:#fff8f8;border:1px solid #ffcdd2;
-              border-radius:4px;padding:3px 10px;display:inline-block">
-    ⚠ Non-final draft — thermodynamic values and fermentation arrows pending consistency check
+<div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start">
+  <div>
+    <h2 style="margin:0 0 2px 0;font-size:20px">
+      RedoxStack — Who Gets the Electrons? Microbial Energetics Under Real Conditions
+    </h2>
+    <div style="font-size:11px;color:#b71c1c;background:#fff8f8;border:1px solid #ffcdd2;
+                border-radius:4px;padding:3px 10px;display:inline-block;margin-bottom:4px">
+      ⚠ Non-final draft — thermodynamic values and fermentation arrows pending consistency check
+    </div>
+    <div style="font-size:11px;color:#444;margin-top:3px">
+      Alberto Scarampi, Jonas Cremer &amp; Orkun S. Soyer
+    </div>
+  </div>
+  <div style="text-align:right;font-size:11px;line-height:2;padding-top:4px;white-space:nowrap">
+    <a href="https://cremerlab.github.io/" target="_blank"
+       style="color:#1565C0;text-decoration:none;font-weight:bold">Cremer Lab</a>
+    &nbsp;·&nbsp;
+    <a href="https://warwick.ac.uk/fac/sci/lifesci/research/osslab/" target="_blank"
+       style="color:#1565C0;text-decoration:none;font-weight:bold">Soyer Lab</a>
   </div>
 </div>
 """
