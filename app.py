@@ -168,16 +168,18 @@ REACTIONS = [
 
 # ── Default values ────────────────────────────────────────────────────────────
 DEFAULTS = dict(
+    # Biochemical standard state: pH 7, all species at unit activity (1 M / 1 bar)
+    # At these values the solid lines coincide with the dashed E°′ reference lines.
     pH=7.0,
-    log_pO2=-0.68,   # air: 21% O2
-    log_pH2=-3.5,
-    log_pCO2=-0.7,
-    log_pCH4=-1.0,
-    log_cSO4=-1.55,
-    log_cAc=-2.3,
-    log_cBut=-3.0,
-    log_cGlc=-3.0,
-    log_cProp=-3.0,
+    log_pO2=0.0,
+    log_pH2=0.0,
+    log_pCO2=0.0,
+    log_pCH4=0.0,
+    log_cSO4=0.0,
+    log_cAc=0.0,
+    log_cBut=0.0,
+    log_cGlc=0.0,
+    log_cProp=0.0,
 )
 
 # ── Preset conditions ─────────────────────────────────────────────────────────
@@ -484,16 +486,24 @@ def detail_pane_fn(pH, log_pO2, log_pH2, log_pCO2, log_pCH4, log_cSO4,
     )
 
 # ── Layout ────────────────────────────────────────────────────────────────────
-LEGEND_HTML = (
-    '<div style="font-size:10px;background:#f9f9f9;border:1px solid #ddd;'
-    'border-radius:4px;padding:4px 8px;margin-bottom:4px;line-height:1.8">'
-    '<span style="color:#2E7D32;font-weight:bold">✓ Feasible</span>'
-    ' &nbsp;— ΔG &lt; 0, reaction releases energy<br>'
-    '<span style="color:#C62828;font-weight:bold">✗ Not feasible</span>'
-    ' &nbsp;— ΔG &gt; 0, requires energy input<br>'
-    '<span style="font-size:9px;color:#666">Dashed arrow = not feasible under current conditions</span>'
-    '</div>'
-)
+LEGEND_HTML = """
+<div style="font-size:10px;background:#f9f9f9;border:1px solid #ddd;
+            border-radius:4px;padding:5px 8px;margin-bottom:4px;line-height:1.9">
+  <b style="font-size:10px;color:#333">Redox couples</b><br>
+  <span style="letter-spacing:2px;color:#888">&#8212; &#8212;</span>
+  &nbsp;E°′ — standard potential (pH 7, all species at 1 M / 1 bar)<br>
+  <span style="color:#333;font-weight:bold">&#8212;&#8212;&#8212;</span>
+  &nbsp;E — actual potential under current conditions (Nernst)<br>
+  <span style="font-size:9px;color:#555;font-style:italic">
+    Solid and dashed lines coincide at standard conditions.</span>
+  <hr style="margin:4px 0;border:none;border-top:1px solid #ddd">
+  <b style="font-size:10px;color:#333">Reaction arrows</b><br>
+  <span style="color:#2E7D32;font-weight:bold">✓ &nbsp;solid arrow</span>
+  &nbsp;— ΔG &lt; 0<br>
+  <span style="color:#C62828;font-weight:bold">✗ &nbsp;dashed arrow</span>
+  &nbsp;— ΔG &gt; 0
+</div>
+"""
 
 left_panel = pn.Column(
     pn.pane.HTML('<b style="font-size:12px">Conditions</b>'),
@@ -518,7 +528,7 @@ HEADER_HTML = """
 <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start">
   <div>
     <h2 style="margin:0 0 2px 0;font-size:20px">
-      RedoxStack — Who Gets the Electrons? Microbial Energetics Under Real Conditions
+      RedoxStack — Who Gets the Electrons Under Real Conditions? An Interactive Version of the Redox Tower
     </h2>
     <div style="font-size:11px;color:#b71c1c;background:#fff8f8;border:1px solid #ffcdd2;
                 border-radius:4px;padding:3px 10px;display:inline-block;margin-bottom:4px">
@@ -529,11 +539,11 @@ HEADER_HTML = """
     </div>
   </div>
   <div style="text-align:right;font-size:11px;line-height:2;padding-top:4px;white-space:nowrap">
-    <a href="https://cremerlab.github.io/" target="_blank"
-       style="color:#1565C0;text-decoration:none;font-weight:bold">Cremer Lab</a>
-    &nbsp;·&nbsp;
     <a href="https://warwick.ac.uk/fac/sci/lifesci/research/osslab/" target="_blank"
        style="color:#1565C0;text-decoration:none;font-weight:bold">Soyer Lab</a>
+    &nbsp;·&nbsp;
+    <a href="https://cremerlab.github.io/" target="_blank"
+       style="color:#1565C0;text-decoration:none;font-weight:bold">Cremer Lab</a>
   </div>
 </div>
 """
