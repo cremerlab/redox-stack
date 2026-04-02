@@ -204,6 +204,13 @@ PRESETS = {
         log_pH2=-4.0,  log_pCO2=-0.70, log_pCH4=-1.5,
         log_cSO4=-4.0, log_cAc=-2.5,   log_cBut=-3.0,  log_cGlc=-4.5, log_cProp=-3.0,
     ),
+    'Anaerobic digester': dict(
+        # Low H2 (~10 ppm) maintained by tight methanogenic coupling
+        # → syntrophic butyrate/propionate oxidation becomes feasible
+        pH=7.2,  log_pO2=-7.0,
+        log_pH2=-5.0,  log_pCO2=-0.40, log_pCH4=-0.20,
+        log_cSO4=-3.0, log_cAc=-2.5,   log_cBut=-3.0,  log_cGlc=-5.0, log_cProp=-3.0,
+    ),
     'Activated sludge': dict(
         pH=7.2,  log_pO2=-2.0,
         log_pH2=-7.0,  log_pCO2=-1.5,  log_pCH4=-6.0,
@@ -423,7 +430,7 @@ def make_figure(pH, log_pO2, log_pH2, log_pCO2, log_pCH4, log_cSO4,
     ax.set_ylim(Y_MIN, Y_MAX)
     ax.invert_yaxis()
     ax.set_xticks([])
-    ax.set_ylabel('Reduction Potential (mV vs SHE)', fontsize=8)
+    ax.set_ylabel('Reduction Potential E (mV)', fontsize=8)
     ax.tick_params(labelsize=7)
     ax.grid(axis='y', alpha=0.2, linestyle=':')
     ax.spines[['top', 'right', 'bottom']].set_visible(False)
@@ -553,6 +560,13 @@ METHODS_HTML = """
             border-radius:6px;font-size:11px;font-family:Georgia,serif;line-height:1.7;
             max-width:1310px">
   <b style="font-size:13px">How condition dependence is calculated</b>
+  <p style="margin:4px 0;font-size:10px;color:#555">
+    Potentials are reported in mV relative to the <b>Standard Hydrogen Electrode (SHE)</b>,
+    the universal electrochemical reference defined as E = 0 mV at pH 0, H₂ = 1 bar, 25 °C.
+    More positive values mean stronger oxidising power; more negative values mean stronger
+    reducing power. At pH 7 the H⁺/H₂ couple sits at −414 mV, which serves as a familiar
+    biological landmark.
+  </p>
   <p style="margin:6px 0">
     Each redox couple is characterised by its <b>standard reduction potential E°′</b> at pH 7
     (biochemical standard state). To account for actual environmental conditions the
