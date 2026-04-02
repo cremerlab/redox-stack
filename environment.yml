@@ -1,0 +1,18 @@
+name: redox-stack
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - numpy
+  - matplotlib
+  - pandas
+  - scipy
+  - jupyter
+  - jupyterlab
+  - ipywidgets
+  - ipympl          # %matplotlib widget backend for interactive plots
+  - nodejs          # required for jupyterlab widget extensions
+  - pip
+  - panel
+  - bokeh
