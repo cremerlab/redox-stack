@@ -525,11 +525,15 @@ LEGEND_HTML = """
 """
 
 left_panel = pn.Column(
-    pn.pane.HTML('<b style="font-size:12px">Conditions</b>'),
+    pn.pane.HTML('<b style="font-size:12px">Conditions</b>'
+                 '<span style="font-size:9px;color:#666;margin-left:4px">'
+                 '— use sliders to adjust</span>'),
     w_pH, w_lo2, w_lh2, w_lco2, w_lch4, w_lso4,
     w_lac, w_lbut, w_lglc, w_lprop,
     conditions_display,
-    pn.pane.HTML('<b style="font-size:11px;margin-top:6px">Set conditions:</b>'),
+    pn.pane.HTML('<b style="font-size:11px;margin-top:6px">Predefined conditions:</b>'
+                 '<span style="font-size:9px;color:#666;margin-left:4px">'
+                 '— click to apply</span>'),
     *_preset_buttons.values(),
     width=270, sizing_mode='fixed'
 )
