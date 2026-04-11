@@ -73,13 +73,13 @@ def E_Ac_EtOH(pH, log_cAc, **kw):
 # ── Half-reactions ────────────────────────────────────────────────────────────
 HALF_RXNS = [
     dict(id='o2',      label='O2 / H2O',       color='#E65100', E_std=+816, col=0, func=E_O2_H2O),
-    dict(id='no3n2',   label='NO3 / N2',        color='#558B2F', E_std=+750, col=0, func=E_NO3_N2),
+    dict(id='no3n2',   label='NO3 / N2',        color='#558B2F', E_std=+751, col=0, func=E_NO3_N2),
     dict(id='no3no2',  label='NO3 / NO2',       color='#827717', E_std=+430, col=0, func=E_NO3_NO2),
     dict(id='glc',     label='CO2 / Glc',       color='#1565C0', E_std=-430, col=0, func=E_CO2_Glc),
     dict(id='no3nh4',  label='NO3 / NH4+',      color='#00838F', E_std=+360, col=1, func=E_NO3_NH4),
     dict(id='fe',      label='Fe(III)/Fe(II)',  color='#8D6E63', E_std=-100, col=1, func=E_Fe),
     dict(id='hs',      label='SO4 / HS-',       color='#6A1B9A', E_std=-217, col=1, func=E_SO4_HS),
-    dict(id='ch4',     label='CO2 / CH4',       color='#2E7D32', E_std=-244, col=1, func=E_CO2_CH4),
+    dict(id='ch4',     label='CO2 / CH4',       color='#2E7D32', E_std=-245, col=1, func=E_CO2_CH4),
     dict(id='pyrlac',  label='Pyr / Lac',       color='#AD1457', E_std=-185, col=2, func=E_Pyr_Lac),
     dict(id='etoh',    label='AcAld / EtOH',    color='#00695C', E_std=-197, col=2, func=E_AcAld_EtOH),
     dict(id='co2ac',   label='CO2 / Ac-',       color='#B71C1C', E_std=-290, col=2, func=E_CO2_Ac),
