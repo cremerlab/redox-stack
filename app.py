@@ -31,7 +31,8 @@ def E_NO3_NH4(pH, **kw):
     return 1000 * (0.878 + _rtf()/8*np.log(1e-3/1e-4) - (10/8)*_rtf()*LN10*pH)
 
 def E_Fe(pH, **kw):
-    return 1000 * (0.314 + _rtf()*np.log(1e-5) - _rtf()*LN10*pH)
+    # Fe(OH)3/Fe2+: E°'(pH7) = -100 mV at unit activity; pH-dependent only
+    return 1000 * (0.314 - _rtf()*LN10*pH)
 
 def E_SO4_HS(pH, log_cSO4, **kw):
     return 1000 * (0.249 + _rtf()/8*np.log(10**log_cSO4/1e-4) - (9/8)*_rtf()*LN10*pH)
@@ -63,6 +64,12 @@ def E_Pyr_Lac(pH, **kw):
 def E_AcAld_EtOH(pH, **kw):
     return 1000 * (0.217 + _rtf()/2*np.log(1e-4/1e-3) - _rtf()*LN10*pH)
 
+def E_Ac_EtOH(pH, log_cAc, **kw):
+    # Acetate/Ethanol couple: CH3COO- + 5H+ + 4e- → C2H5OH + H2O
+    # E°'(pH0) = 0.130 V  → E°'(pH7) ≈ -388 mV  (from ΔG°'=+10 kJ/mol for syntrophic EtOH ox.)
+    # [EtOH] assumed = 1 M; acetate from slider
+    return 1000 * (0.130 + _rtf()/4*np.log(10**log_cAc) - (5/4)*_rtf()*LN10*pH)
+
 # ── Half-reactions ────────────────────────────────────────────────────────────
 HALF_RXNS = [
     dict(id='o2',      label='O2 / H2O',       color='#E65100', E_std=+816, col=0, func=E_O2_H2O),
@@ -73,13 +80,13 @@ HALF_RXNS = [
     dict(id='fe',      label='Fe(III)/Fe(II)',  color='#8D6E63', E_std=-100, col=1, func=E_Fe),
     dict(id='hs',      label='SO4 / HS-',       color='#6A1B9A', E_std=-217, col=1, func=E_SO4_HS),
     dict(id='ch4',     label='CO2 / CH4',       color='#2E7D32', E_std=-244, col=1, func=E_CO2_CH4),
-    dict(id='crotbut', label='CrCoA/ButCoA',   color='#FF7043', E_std=-10,  col=2, func=E_Crot_But),
     dict(id='pyrlac',  label='Pyr / Lac',       color='#AD1457', E_std=-185, col=2, func=E_Pyr_Lac),
     dict(id='etoh',    label='AcAld / EtOH',    color='#00695C', E_std=-197, col=2, func=E_AcAld_EtOH),
     dict(id='co2ac',   label='CO2 / Ac-',       color='#B71C1C', E_std=-290, col=2, func=E_CO2_Ac),
     dict(id='co2but',  label='CO2 / But-',      color='#6200EA', E_std=-280, col=2, func=E_CO2_But),
     dict(id='prop',    label='CO2 / Prop-',     color='#F9A825', E_std=-282, col=3, func=E_CO2_Prop),
     dict(id='nad',     label='NAD+ / NADH',     color='#6D4C41', E_std=-320, col=3, func=E_NAD),
+    dict(id='etohac',  label='Ac / EtOH',       color='#00695C', E_std=-388, col=3, func=E_Ac_EtOH),
     dict(id='h2',      label='H+ / H2',         color='#37474F', E_std=-414, col=3, func=E_H2),
 ]
 
@@ -94,76 +101,79 @@ HR_COL = {hr['id']: hr['col'] for hr in HALF_RXNS}
 
 # ── Reactions ─────────────────────────────────────────────────────────────────
 REACTIONS = [
-    dict(id='aerobic',   label='Aerobic respiration',     color='#E65100', ne=24,
+    # ── Respirations (matching paper Table 1) ─────────────────────────────────
+    dict(id='aerobic',   label='Aerobic respiration',          color='#E65100', ne=24,
          donor='glc',    acceptor='o2',
          eq_don='Glucose + 6H2O → 6CO2 + 24H⁺ + 24e⁻',
          eq_acc='6O2 + 24H⁺ + 24e⁻ → 12H2O',
          eq_net='Glucose + 6O2 → 6CO2 + 6H2O'),
-    dict(id='denitrif',  label='Denitrification',         color='#558B2F', ne=24,
-         donor='glc',    acceptor='no3n2',
-         eq_don='Glucose + 6H2O → 6CO2 + 24H⁺ + 24e⁻',
-         eq_acc='2.4 NO3⁻ + 28.8H⁺ + 24e⁻ → 1.2 N2 + 14.4H2O',
-         eq_net='Glucose + 2.4 NO3⁻ → 6CO2 + 1.2 N2 + H2O'),
+    dict(id='denitrif',  label='Denitrification',              color='#558B2F', ne=10,
+         donor='h2',     acceptor='no3n2',
+         eq_don='5H2 → 10H⁺ + 10e⁻',
+         eq_acc='2NO3⁻ + 12H⁺ + 10e⁻ → N2 + 6H2O',
+         eq_net='5H2 + 2NO3⁻ + 2H⁺ → N2 + 6H2O'),
+    dict(id='fe_red',    label='Iron reduction',               color='#8D6E63', ne=2,
+         donor='h2',     acceptor='fe',
+         eq_don='H2 → 2H⁺ + 2e⁻',
+         eq_acc='2Fe(OH)3 + 4H⁺ + 2e⁻ → 2Fe²⁺ + 6H2O',
+         eq_net='H2 + 2Fe(OH)3 + 4H⁺ → 2Fe²⁺ + 6H2O'),
+    dict(id='h2sr',      label='H2-driven sulfate reduction',  color='#6A1B9A', ne=8,
+         donor='h2',     acceptor='hs',
+         eq_don='4H2 → 8H⁺ + 8e⁻',
+         eq_acc='SO4²⁻ + 9H⁺ + 8e⁻ → HS⁻ + 4H2O',
+         eq_net='4H2 + SO4²⁻ → HS⁻ + H⁺ + 4H2O'),
     dict(id='h2meth',    label='Hydrogenotrophic methanogenesis', color='#2E7D32', ne=8,
          donor='h2',     acceptor='ch4',
          eq_don='4H2 → 8H⁺ + 8e⁻',
          eq_acc='CO2 + 8H⁺ + 8e⁻ → CH4 + 2H2O',
          eq_net='4H2 + CO2 → CH4 + 2H2O'),
-    dict(id='h2sr',      label='H2-driven sulfate reduction', color='#6A1B9A', ne=8,
-         donor='h2',     acceptor='hs',
-         eq_don='4H2 → 8H⁺ + 8e⁻',
-         eq_acc='SO4²⁻ + 9H⁺ + 8e⁻ → HS⁻ + 4H2O',
-         eq_net='4H2 + SO4²⁻ → HS⁻ + H⁺ + 4H2O'),
-    dict(id='saob',      label='Syntrophic acetate oxidation', color='#B71C1C', ne=8,
-         donor='co2ac',  acceptor='h2',
-         eq_don='CH3COO⁻ + 2H2O → 2CO2 + 7H⁺ + 8e⁻',
-         eq_acc='8H⁺ + 8e⁻ → 4H2',
-         eq_net='CH3COO⁻ + 3H2O → 4H2 + 2HCO3⁻'),
-    dict(id='chain',     label='Chain elongation',        color='#FF7043', ne=2,
-         donor='pyrlac', acceptor='crotbut',
-         eq_don='Lactate → Pyruvate + 2H⁺ + 2e⁻',
-         eq_acc='Crotonyl-CoA + 2H⁺ + 2e⁻ → Butyryl-CoA',
-         eq_net='Lactate + Crotonyl-CoA → Pyruvate + Butyryl-CoA'),
-    dict(id='glc_but',   label='Glucose → Butyrate fermentation', color='#1565C0', ne=20,
-         donor='glc',    acceptor='co2but',
-         eq_don='Glucose + 6H2O → 6CO2 + 24H⁺ + 24e⁻  (×20/24)',
-         eq_acc='4CO2 + 19H⁺ + 20e⁻ → But⁻ + 6H2O',
-         eq_net='Glucose → But⁻ + 2CO2 + H⁺ + 2H2'),
-    dict(id='glc_ac',    label='Glucose → Acetate fermentation', color='#0277BD', ne=8,
-         donor='glc',    acceptor='co2ac',
-         eq_don='Glucose + 6H2O → 6CO2 + 24H⁺ + 24e⁻  (×8/24)',
-         eq_acc='2CO2 + 7H⁺ + 8e⁻ → CH3COO⁻ + 2H2O',
-         eq_net='Glucose → 2 Acetate⁻ + 2CO2 + 4H2 + 2H⁺'),
-    dict(id='glc_lac',   label='Glucose → Lactate fermentation', color='#880E4F', ne=4,
-         donor='glc',    acceptor='pyrlac',
-         eq_don='Glucose → 6CO2 + 24H⁺ + 24e⁻  (approx., ×4/24)',
-         eq_acc='2 Pyruvate + 4H⁺ + 4e⁻ → 2 Lactate',
-         eq_net='Glucose → 2 Lactate  (glycolysis + LDH)'),
-    dict(id='glc_etoh',  label='Glucose → Ethanol fermentation', color='#004D40', ne=4,
-         donor='glc',    acceptor='etoh',
-         eq_don='Glucose → 6CO2 + 24H⁺ + 24e⁻  (approx., ×4/24)',
-         eq_acc='2 Acetaldehyde + 4H⁺ + 4e⁻ → 2 Ethanol',
-         eq_net='Glucose → 2 Ethanol + 2 CO2  (alcoholic ferm.)'),
-    dict(id='but_synt',  label='Syntrophic butyrate oxidation', color='#4A148C', ne=20,
-         donor='co2but', acceptor='h2',
-         eq_don='But⁻ + 6H2O → 4CO2 + 27H⁺ + 20e⁻',
-         eq_acc='20H⁺ + 20e⁻ → 10H2',
-         eq_net='But⁻ + 2H2O → 2Ac⁻ + H⁺ + 2H2  (requires low H2!)'),
-    dict(id='prop_synt', label='Syntrophic propionate oxidation', color='#BF360C', ne=6,
-         donor='prop',   acceptor='h2',
-         eq_don='Prop⁻ + 2H2O → Ac⁻ + CO2 + 5H⁺ + 6e⁻  (simplified)',
-         eq_acc='6H⁺ + 6e⁻ → 3H2',
-         eq_net='Prop⁻ + 2H2O → Ac⁻ + CO2 + 3H2  (requires low H2!)'),
-    dict(id='homoacet',  label='Homoacetogenesis',         color='#1B5E20', ne=8,
-         donor='h2',     acceptor='co2ac',
-         eq_don='4H2 → 8H⁺ + 8e⁻',
-         eq_acc='2CO2 + 7H⁺ + 8e⁻ → CH3COO⁻ + 2H2O',
-         eq_net='4H2 + 2CO2 → CH3COO⁻ + H⁺ + 2H2O'),
-    dict(id='ac_meth',   label='Acetoclastic methanogenesis', color='#33691E', ne=8,
+    dict(id='ac_meth',   label='Acetoclastic methanogenesis',  color='#33691E', ne=8,
          donor='co2ac',  acceptor='ch4',
          eq_don='CH3COO⁻ + 2H2O → 2CO2 + 7H⁺ + 8e⁻',
          eq_acc='CO2 + 8H⁺ + 8e⁻ → CH4 + 2H2O',
          eq_net='CH3COO⁻ + H2O → CH4 + HCO3⁻'),
+    dict(id='aom',       label='Anaerobic oxidation of methane (AOM)', color='#37474F', ne=8,
+         donor='ch4',    acceptor='hs',
+         eq_don='CH4 + 2H2O → CO2 + 8H⁺ + 8e⁻',
+         eq_acc='SO4²⁻ + 9H⁺ + 8e⁻ → HS⁻ + 4H2O',
+         eq_net='CH4 + SO4²⁻ → HCO3⁻ + HS⁻ + H2O'),
+    # ── Primary fermentations ─────────────────────────────────────────────────
+    dict(id='homoacet',  label='Homoacetogenesis (H2 + CO2)',  color='#1B5E20', ne=8,
+         donor='h2',     acceptor='co2ac',
+         eq_don='4H2 → 8H⁺ + 8e⁻',
+         eq_acc='2CO2 + 7H⁺ + 8e⁻ → CH3COO⁻ + 2H2O',
+         eq_net='4H2 + 2CO2 → CH3COO⁻ + H⁺ + 2H2O'),
+    dict(id='glc_etoh',  label='Ethanol fermentation',         color='#004D40', ne=4,
+         donor='glc',    acceptor='etoh',
+         eq_don='Glucose → 6CO2 + 24H⁺ + 24e⁻  (approx., ×4/24)',
+         eq_acc='2 Acetaldehyde + 4H⁺ + 4e⁻ → 2 Ethanol',
+         eq_net='Glucose → 2 Ethanol + 2 CO2  (alcoholic ferm.)'),
+    dict(id='glc_but',   label='Butyric acid fermentation',    color='#1565C0', ne=20,
+         donor='glc',    acceptor='co2but',
+         eq_don='Glucose + 6H2O → 6CO2 + 24H⁺ + 24e⁻  (×20/24)',
+         eq_acc='4CO2 + 19H⁺ + 20e⁻ → But⁻ + 6H2O',
+         eq_net='Glucose + 2H2O → But⁻ + 2HCO3⁻ + 3H⁺ + 2H2'),
+    dict(id='glc_lac',   label='Lactic acid fermentation',     color='#880E4F', ne=4,
+         donor='glc',    acceptor='pyrlac',
+         eq_don='Glucose → 6CO2 + 24H⁺ + 24e⁻  (approx., ×4/24)',
+         eq_acc='2 Pyruvate + 4H⁺ + 4e⁻ → 2 Lactate',
+         eq_net='Glucose → 2 Lactate  (glycolysis + LDH)'),
+    # ── Secondary fermentations / syntrophic ──────────────────────────────────
+    dict(id='prop_synt', label='Syntrophic propionate oxidation', color='#BF360C', ne=6,
+         donor='prop',   acceptor='h2',
+         eq_don='Prop⁻ + 3H2O → Ac⁻ + HCO3⁻ + 5H⁺ + 6e⁻',
+         eq_acc='6H⁺ + 6e⁻ → 3H2',
+         eq_net='Prop⁻ + 3H2O → Ac⁻ + HCO3⁻ + H⁺ + 3H2  (requires low H2)'),
+    dict(id='but_synt',  label='Syntrophic butyrate oxidation', color='#4A148C', ne=4,
+         donor='co2but', acceptor='h2',
+         eq_don='But⁻ + 2H2O → 2Ac⁻ + H⁺ + 2H2  (overall)',
+         eq_acc='4H⁺ + 4e⁻ → 2H2',
+         eq_net='But⁻ + 2H2O → 2Ac⁻ + H⁺ + 2H2  (requires low H2)'),
+    dict(id='etoh_synt', label='Syntrophic ethanol oxidation',  color='#00695C', ne=4,
+         donor='etohac', acceptor='h2',
+         eq_don='C2H5OH + H2O → CH3COO⁻ + 5H⁺ + 4e⁻',
+         eq_acc='4H⁺ + 4e⁻ → 2H2',
+         eq_net='C2H5OH + H2O → CH3COO⁻ + H⁺ + 2H2  (requires low H2)'),
 ]
 
 # ── Default values ────────────────────────────────────────────────────────────

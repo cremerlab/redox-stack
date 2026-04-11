@@ -1,0 +1,15 @@
+id,label,color,ne,donor,acceptor,eq_net
+aerobic,Aerobic respiration,#E65100,24,glc,o2,Glucose + 6O2 → 6CO2 + 6H2O
+denitrif,Denitrification,#558B2F,24,glc,no3n2,Glucose + 2.4 NO3⁻ → 6CO2 + 1.2 N2 + H2O
+h2meth,Hydrogenotrophic methanogenesis,#2E7D32,8,h2,ch4,4H2 + CO2 → CH4 + 2H2O
+h2sr,H2-driven sulfate reduction,#6A1B9A,8,h2,hs,4H2 + SO4²⁻ → HS⁻ + H⁺ + 4H2O
+saob,Syntrophic acetate oxidation,#B71C1C,8,co2ac,h2,CH3COO⁻ + 3H2O → 4H2 + 2HCO3⁻
+chain,Chain elongation,#FF7043,2,pyrlac,crotbut,Lactate + Crotonyl-CoA → Pyruvate + Butyryl-CoA
+glc_but,Glucose → Butyrate fermentation,#1565C0,20,glc,co2but,Glucose → But⁻ + 2CO2 + H⁺ + 2H2
+glc_ac,Glucose → Acetate fermentation,#0277BD,8,glc,co2ac,Glucose → 2 Acetate⁻ + 2CO2 + 4H2 + 2H⁺
+glc_lac,Glucose → Lactate fermentation,#880E4F,4,glc,pyrlac,Glucose → 2 Lactate (glycolysis + LDH)
+glc_etoh,Glucose → Ethanol fermentation,#004D40,4,glc,etoh,Glucose → 2 Ethanol + 2 CO2 (alcoholic ferm.)
+but_synt,Syntrophic butyrate oxidation,#4A148C,20,co2but,h2,But⁻ + 2H2O → 2Ac⁻ + H⁺ + 2H2 (requires low H2)
+prop_synt,Syntrophic propionate oxidation,#BF360C,6,prop,h2,Prop⁻ + 2H2O → Ac⁻ + CO2 + 3H2 (requires low H2)
+homoacet,Homoacetogenesis,#1B5E20,8,h2,co2ac,4H2 + 2CO2 → CH3COO⁻ + H⁺ + 2H2O
+ac_meth,Acetoclastic methanogenesis,#33691E,8,co2ac,ch4,CH3COO⁻ + H2O → CH4 + HCO3⁻
