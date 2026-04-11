@@ -549,10 +549,6 @@ HEADER_HTML = """
     <h2 style="margin:0 0 2px 0;font-size:20px">
       Redox Tower Interactive — Who Gets the Electrons Under Real Conditions?
     </h2>
-    <div style="font-size:11px;color:#b71c1c;background:#fff8f8;border:1px solid #ffcdd2;
-                border-radius:4px;padding:3px 10px;display:inline-block;margin-bottom:4px">
-      ⚠ Non-final draft — thermodynamic values and fermentation arrows pending consistency check
-    </div>
     <div style="font-size:11px;color:#444;margin-top:3px">
       Alberto Scarampi, Jonas Cremer &amp; Orkun S. Soyer
     </div>
@@ -641,23 +637,11 @@ METHODS_HTML = """
 INTRO_HTML = """
 <div style="max-width:1310px;font-size:12px;font-family:Georgia,serif;line-height:1.7;
             margin-bottom:10px;color:#222">
-  This figure is the interactive companion to Fig. 1 of our paper, where we argue that
-  microbial redox processes are shaped by three layers of regulation.
-  <b>Layer 1</b> defines what is thermodynamically possible in principle: the classical
-  redox tower under standard conditions (pH 7, all species at unit activity), shown here
-  as dashed reference lines.
-  <b>Layer 2</b> asks what can actually occur under the conditions a microorganism
-  encounters — shifting potentials through pH, gas partial pressures, and metabolite
-  concentrations via the Nernst equation, shown as solid lines.
-  <b>Layer 3</b> involves additional cellular regulation beyond thermodynamics.
-  <br>
-  This interactive figure illustrates how potentials and possible processes shift with
-  environmental conditions. Importantly, while environmental conditions can shift
-  potentials considerably, the standard-condition tower (Layer 1) remains a useful
-  first approximation: the <i>relative ordering</i> of couples is largely preserved, and
-  concentrations alone rarely overturn the thermodynamic hierarchy — they refine it.
-  The cases where they do (e.g. syntrophic oxidations becoming feasible only at very
-  low H₂) are precisely where Layer 2 thinking becomes essential.
+  This is the interactive version of Fig. 1 of our paper. It illustrates how redox
+  potentials and feasible processes shift with environmental conditions — pH, gas partial
+  pressures, and metabolite concentrations — via the Nernst equation.
+  Dashed lines show standard-condition potentials (pH 7, unit activity); solid lines show
+  actual potentials under the selected conditions.
 </div>
 """
 
