@@ -547,7 +547,7 @@ HEADER_HTML = """
 <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start">
   <div>
     <h2 style="margin:0 0 2px 0;font-size:20px">
-      RedoxStack — Who Gets the Electrons Under Real Conditions? An Interactive Version of the Redox Tower
+      Redox Tower — Who Gets the Electrons Under Real Conditions?
     </h2>
     <div style="font-size:11px;color:#b71c1c;background:#fff8f8;border:1px solid #ffcdd2;
                 border-radius:4px;padding:3px 10px;display:inline-block;margin-bottom:4px">
